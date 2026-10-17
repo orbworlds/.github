@@ -1,0 +1,32 @@
+# Orb's test for its worlds, which every world's repository in the org runs (its
+# .github/workflows/test.yml calls this): npm test on every pull request and push. A project (with
+# tools/package.mjs) is also packaged on every push to main into the `orb` branch, which is what Orb
+# plays. Made by Orb (scripts/sync-org.mjs).
+name: World
+
+on:
+  workflow_call:
+
+permissions:
+  contents: write
+
+jobs:
+  play:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npm test
+      - name: Package for Orb
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && hashFiles('tools/package.mjs') != ''
+        run: |
+          node tools/package.mjs "$RUNNER_TEMP/orb"
+          cd "$RUNNER_TEMP/orb"
+          git init -q -b orb
+          git add -A
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -q -m "Packaged from ${GITHUB_SHA::7}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" orb
