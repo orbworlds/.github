@@ -1,10 +1,6 @@
 # Orb
 
-Orb is a place to make games and little worlds by describing them, play them in the browser with
-other people, and remix anyone's. It lives at **[orbworlds.com](https://orbworlds.com/?utm_source=github&utm_medium=profile)**.
-
-These are the worlds we made ourselves. All of them are open source under the MIT license: read the
-code, run it locally with `npm install` and `npm start`, send a pull request, or remix it on Orb.
+Make worlds by describing them, play them together, remix anything: **[orbworlds.com](https://orbworlds.com/?utm_source=github&utm_medium=profile)**
 
 | | |
 |---|---|
